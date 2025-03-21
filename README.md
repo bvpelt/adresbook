@@ -26,3 +26,21 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
+# Getting started
+
+## Setup environment
+### NVM
+See https://github.com/nvm-sh/nvm 
+
+### Node
+```bash
+nvm install 20
+nvm use 20
+node -v
+```
+
+### Angular
+```bash
+npm install -g @angular/cli
+```
+
