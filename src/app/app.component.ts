@@ -9,11 +9,13 @@ import { LogonService } from './services/logon.service';
 })
 export class AppComponent {
   title = 'adresbook';
+  private appConfig: any;
 
   isLoggedIn$: Observable<boolean>;
 
   constructor(private logonService: LogonService) {
     this.isLoggedIn$ = this.logonService.isLoggedIn$;
   }
+
 
 }

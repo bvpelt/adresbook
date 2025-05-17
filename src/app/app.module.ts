@@ -6,7 +6,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { environment } from '../environments/environment';
-import { ConfigService } from './services/config.service';
+
 
 import { ApiModule, Configuration, ConfigurationParameters } from './core/modules/openapi';
 
@@ -33,9 +33,12 @@ import { PrivilegeComponent } from './privilege/privilege.component';
 import { PrivilegedetailComponent } from './privilegedetail/privilegedetail.component';
 import { PersonselectComponent } from './personselect/personselect.component';
 
+/*
 export function apiConfigFactory(): Configuration {
-  return new Configuration({ basePath: environment.apiUrl });
+  return new Configuration({ basePath: environment.apiBaseUrl });
 }
+*/
+
 
 @NgModule({
   declarations: [
@@ -65,7 +68,7 @@ export function apiConfigFactory(): Configuration {
     FontAwesomeModule,
     FormsModule,
     AppRoutingModule,
-    ApiModule.forRoot(apiConfigFactory),  // Corrected signature
+    ApiModule,  // Corrected signature
     HttpClientModule,
     environment.enableServiceWorker ? ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
@@ -76,12 +79,7 @@ export function apiConfigFactory(): Configuration {
     }) : []
   ],
   providers: [
-    ConfigService,
-    {
-      provide: Configuration,
-      useFactory: apiConfigFactory,
-      deps: [ConfigService],
-    },
+   
   ],
   bootstrap: [AppComponent]
 })

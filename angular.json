@@ -42,6 +42,7 @@
           },
           "configurations": {
             "production": {
+              "outputPath": "dist/angular-app",
               "sourceMap": true,
               "optimization": {
                 "scripts": true,

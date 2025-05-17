@@ -5,6 +5,7 @@ import { Adres } from '../core/modules/openapi/model/adres';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { AdresBody, BASE_PATH, Configuration, PagedAdresses, PagedPersons } from '../core/modules/openapi';
 import { DynamicconfigService } from './dynamicconfig.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -18,14 +19,14 @@ export class AdresService {
     @Optional() @Inject(BASE_PATH) basePath: string | string[],
     private dynamicConfigService: DynamicconfigService
   ) {
-    var basePathToUse = Array.isArray(BASE_PATH) ? BASE_PATH[0] : BASE_PATH;
+    var basePathToUse = `${environment.apiBaseUrl}`;
      var config: Configuration = new Configuration({
           basePath: basePathToUse
         });
-    this.api = new AdressesService(http, basePath, config);
+    this.api = new AdressesService(http, basePathToUse, config);
     this.dynamicConfigService.config$.subscribe((config: any) => {
       if (config) {
-        this.api = new AdressesService(http, basePath, config);
+        this.api = new AdressesService(http, basePathToUse, config);
       }
     });
   }
