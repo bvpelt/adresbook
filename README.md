@@ -44,3 +44,8 @@ node -v
 npm install -g @angular/cli
 ```
 
+# Docker
+Build an image from the project directory
+```bash
+./build.sh
+```

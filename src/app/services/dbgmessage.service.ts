@@ -7,7 +7,7 @@ export class DbgmessageService {
   private static readonly LEVELS: string[] = ["FAT ", "ERR ", "WARN", "INFO", "DBG ", "TRC "]; // levels 0 FAT, 1 ERR, 2 WARN, 3 INFO, 4 DBG, 5 TRC
 
   messages: string[] = [];
-  maxlevel: number = this.getLevelIndex("INFO");
+  maxlevel: number = this.getLevelIndex("DBG");
 
   constructor() { }
 

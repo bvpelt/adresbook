@@ -33,13 +33,8 @@ import { PrivilegeComponent } from './privilege/privilege.component';
 import { PrivilegedetailComponent } from './privilegedetail/privilegedetail.component';
 import { PersonselectComponent } from './personselect/personselect.component';
 
-
-export function apiConfigFactory(configService: ConfigService): Configuration { // Inject ConfigService
-  const params: ConfigurationParameters = {
-    // set configuration parameters here.
-    basePath: configService.getApiUrl(),
-  }
-  return new Configuration(params);
+export function apiConfigFactory(): Configuration {
+  return new Configuration({ basePath: environment.apiUrl });
 }
 
 @NgModule({
@@ -70,8 +65,7 @@ export function apiConfigFactory(configService: ConfigService): Configuration { 
     FontAwesomeModule,
     FormsModule,
     AppRoutingModule,
-    ApiModule.forRoot(() => new Configuration()), // Pass a dummy factory function
-
+    ApiModule.forRoot(apiConfigFactory),  // Corrected signature
     HttpClientModule,
     environment.enableServiceWorker ? ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),

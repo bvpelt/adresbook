@@ -1,5 +1,5 @@
 export const environment = {
-    production: true,
-    enableServiceWorker: true,
-    apiUrl: '' // Will be set at runtime
-  };
+  production: true,
+  enableServiceWorker: true,
+  apiUrl: window["env"]?.API_BASE_URL || ''
+};

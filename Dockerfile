@@ -1,22 +1,22 @@
-
 FROM nginx:alpine
 
-LABEL maintainer="Bart van Pelt <brtvnplt@gmail.com>"cd
+LABEL maintainer="Bart van Pelt <brtvnplt@gmail.com>"
 
-# Install bash and curl
-RUN apk update && apk add bash curl
+# Install bash and envsubst for build-time variable substitution
+RUN apk add --no-cache bash gettext
 
-# Create the directory
-RUN mkdir -p /usr/share/nginx/html
+# Copy application files
+COPY dist/adresbook/browser /usr/share/nginx/html
 
-COPY dist/adresbook/browser/  /usr/share/nginx/html
-
-# Replace placeholder with environment variable
-RUN envsubst '\$API_BASE_URL' < /usr/share/nginx/html/index.html > /usr/share/nginx/html/temp.html && \
-    mv /usr/share/nginx/html/temp.html /usr/share/nginx/html/index.html
-
+# Copy nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
 
-EXPOSE 80
+# Copy your env.js file
+COPY dist/adresbook/browser/assets/env.js /usr/share/nginx/html/assets/env.js 
 
+# Perform the substitution and inspect the content
+#RUN envsubst < /usr/share/nginx/html/assets/env.js > /usr/share/nginx/html/assets/env.js && cat /usr/share/nginx/html/assets/env.js
+RUN sed "s|\$API_BASE_URL|$API_BASE_URL|g" /usr/share/nginx/html/assets/env.js > /usr/share/nginx/html/assets/env.js
+
+# Start nginx in the foreground
 CMD ["nginx", "-g", "daemon off;"]
