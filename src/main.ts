@@ -9,10 +9,4 @@ if (environment.production) {
 
 platformBrowserDynamic()
   .bootstrapModule(AppModule)
- // .then(async (moduleRef) => {
-    /*
-    const appConfigService = moduleRef.injector.get(AppConfigService);
-    await appConfigService.loadAppConfig();
-    */
- // })
   .catch(err => console.error(err));
