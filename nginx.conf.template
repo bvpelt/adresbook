@@ -16,7 +16,7 @@ http {
         # Nginx will try to resolve this during startup, so it needs to be a valid IP or resolvable hostname.
         # This will be substituted at runtime by envsubst.
         location /adres/api/v1/ {
-            proxy_pass $ADRES_APP_PROXY_URL; # <--- NEW: Use an environment variable
+            proxy_pass $ADRES_APP_PROXY_URL; 
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
