@@ -9,10 +9,12 @@ RUN npm run build -- --configuration=production
 # Stage 2: Serve the Angular application using a lightweight web server (e.g., nginx)
 FROM nginx:alpine
 RUN apk update && apk add --no-cache gettext
-COPY --from=builder /app/dist/angular-app /usr/share/nginx/html
-RUN ls -altr /usr/share/nginx/html
+COPY --from=builder /app/dist/angular-app/browser /usr/share/nginx/html
+# Copy your public assets
 COPY ./public /usr/share/nginx/html/public
-COPY nginx.conf /etc/nginx/nginx.conf
+#COPY nginx.conf.template /etc/nginx/nginx.conf.template # <--- Use the template
+COPY nginx.conf.template /etc/nginx/nginx.conf.template
 COPY public/assets/config/app-config.template.json /usr/share/nginx/html/public/assets/config/app-config.template.json
-CMD ["sh", "-c", "envsubst '$API_BASE_URL' < /usr/share/nginx/html/public/assets/config/app-config.template.json > /usr/share/nginx/html/public/assets/config/app-config.json && nginx -g 'daemon off;'"]
+# Substitute both variables before starting Nginx
+CMD ["sh", "-c", "envsubst '$API_BASE_URL $ADRES_APP_PROXY_URL' < /usr/share/nginx/html/public/assets/config/app-config.template.json > /usr/share/nginx/html/public/assets/config/app-config.json && envsubst '$ADRES_APP_PROXY_URL' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"]
 EXPOSE 80
