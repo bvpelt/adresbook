@@ -43,18 +43,18 @@ export class AdresesComponent implements OnInit {
     this.adresChangesubscription = this.adresseschangedService.newAdres$
       .subscribe(adres => {
         this.dbgmessageService.debug('AdresesComponent - retrieve adresses go add: ' + JSON.stringify(adres));
-        this.getAdresses(this.logonService.xApiKey, this.page, this.size);
+        this.getAdresses(this.page, this.size);
       });
   }
 
   ngOnInit(): void {
     this.dbgmessageService.debug('AdresesComponent - activated initial');
     this.errormessage = "";
-    this.getAdresses(this.logonService.xApiKey, this.page, this.size);
+    this.getAdresses(this.page, this.size);
   }
 
-  getAdresses(xApiKey: string, page: number, size: number): void {
-    this.adresService.getAdresses(xApiKey, page, size)
+  getAdresses(page: number, size: number): void {
+    this.adresService.getAdresses(page, size)
       .subscribe({
         next:
           response => {
@@ -100,12 +100,12 @@ export class AdresesComponent implements OnInit {
 
   onNextPage(): void {
     this.page = this.nextpage;
-    this.getAdresses(this.logonService.xApiKey, this.page, this.size);
+    this.getAdresses(this.page, this.size);
   }
 
   onPrevPage(): void {
     this.page = this.prevpage;
-    this.getAdresses(this.logonService.xApiKey, this.page, this.size);
+    this.getAdresses(this.page, this.size);
   }
 
   onDelete(adres: Adres): void {

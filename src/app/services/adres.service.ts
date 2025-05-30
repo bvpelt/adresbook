@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { AdresBody, BASE_PATH, Configuration, PagedAdresses, PagedPersons } from '../core/modules/openapi';
 import { DynamicconfigService } from './dynamicconfig.service';
 import { environment } from '../../environments/environment';
+import { AppconfigService } from './appconfig.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,20 +16,33 @@ export class AdresService {
   private api: AdressesService | undefined;
 
   constructor(
+    private adressesService: AdressesService,
+    private appConfigService: AppconfigService,
     private http: HttpClient,
-    @Optional() @Inject(BASE_PATH) basePath: string | string[],
-    private dynamicConfigService: DynamicconfigService
+    //    @Optional() @Inject(BASE_PATH) basePath: string | string[],
+    //    private dynamicConfigService: DynamicconfigService
   ) {
-    var basePathToUse = `${environment.apiBaseUrl}`;
-     var config: Configuration = new Configuration({
-          basePath: basePathToUse
-        });
-    this.api = new AdressesService(http, basePathToUse, config);
-    this.dynamicConfigService.config$.subscribe((config: any) => {
-      if (config) {
-        this.api = new AdressesService(http, basePathToUse, config);
-      }
+    //   var basePathToUse: string = dynamicConfigService.apiUrl;
+    var basePathToUse: string = appConfigService.getApiBaseUrl();
+
+    console.log("AdresService constructor() basePathToUse: " + basePathToUse);
+
+    var config: Configuration = new Configuration({
+      basePath: basePathToUse
     });
+    console.log("AdresService constructor() config: " + JSON.stringify(config));
+
+    //this.api = new AdressesService(http, basePathToUse, config);
+    //this.api = new AdressesService(http, basePathToUse , config);
+    //this.api = new AdressesService(http, appConfigService.getApiBaseUrl(), appConfigService.getApiConfig());
+    this.api = adressesService; // Use the injected AdressesService instance
+    console.log("AdresService constructor() api: " + JSON.stringify(this.api));
+    console.log("AdresService constructor() adressesService: " + JSON.stringify(adressesService));
+    //    this.dynamicConfigService.config$.subscribe((config: any) => {
+    //      if (config) {
+    //        this.api = new AdressesService(http, basePathToUse, config);
+    //      }
+    //    });
   }
 
   // public deleteAdres(id: number, xAPIKEY?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
@@ -84,18 +98,14 @@ export class AdresService {
   }
 
   // public getAdresses(page: number, size: number, sort?: Array<string>, xAPIKEY?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<PagedAdresses>>;
-  getAdresses(xApiKey: string, page?: number, size?: number): Observable<HttpResponse<PagedAdresses>> {
-    const headers: HttpHeaders = new HttpHeaders({
-      'x-api-key': xApiKey
-    });
+  getAdresses(page?: number, size?: number): Observable<HttpResponse<PagedAdresses>> {
 
     const options: any = {
-      headers: headers,
       httpHeaderAccept: 'application/json'
     }
 
     if (this.api != undefined) {
-      return this.api.getAdresses(page!, size!,  xApiKey, ["id"], 'response', false, options);
+      return this.api.getAdresses(page!, size!, this.appConfigService.getApiKey(), ["id"], 'response', false, options);
     } else {
       throw new Error("OpenadresService api not yet defined");
     }

@@ -9,12 +9,13 @@
  */
 /* tslint:disable:no-unused-variable member-ordering */
 
-import { Inject, Injectable, Optional }                      from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams,
-         HttpResponse, HttpEvent, HttpParameterCodec, HttpContext 
-        }       from '@angular/common/http';
-import { CustomHttpParameterCodec }                          from '../encoder';
-import { Observable }                                        from 'rxjs';
+import { Inject, Injectable, Optional } from '@angular/core';
+import {
+    HttpClient, HttpHeaders, HttpParams,
+    HttpResponse, HttpEvent, HttpParameterCodec, HttpContext
+} from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
+import { Observable } from 'rxjs';
 
 // @ts-ignore
 import { Adres } from '../model/adres';
@@ -28,8 +29,8 @@ import { PagedPersons } from '../model/paged-persons';
 import { ProblemDetail } from '../model/problem-detail';
 
 // @ts-ignore
-import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
-import { Configuration }                                     from '../configuration';
+import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
+import { Configuration } from '../configuration';
 import {
     AdressesServiceInterface
 } from './adresses.serviceInterface';
@@ -37,7 +38,7 @@ import {
 
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class AdressesService implements AdressesServiceInterface {
 
@@ -46,11 +47,16 @@ export class AdressesService implements AdressesServiceInterface {
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
 
-    constructor(protected httpClient: HttpClient, @Optional()@Inject(BASE_PATH) basePath: string|string[], @Optional() configuration: Configuration) {
+    constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string | string[], @Optional() configuration: Configuration) {
+        console.log("AdressesService.constructor basePath start: ", basePath, "configuration: ", JSON.stringify(configuration));
         if (configuration) {
             this.configuration = configuration;
         }
+        console.log("AdressesService.constructor basePath 01: ", basePath, "configuration parameter: ", JSON.stringify(configuration));
+        console.log("AdressesService.constructor basePath 02: ", basePath, "configuration local: ", JSON.stringify(this.configuration));
         if (typeof this.configuration.basePath !== 'string') {
+            console.log("AdressesService.constructor basePath 03: ", basePath, "configuration parameter: ", JSON.stringify(configuration));
+            console.log("AdressesService.constructor basePath 04: ", basePath, "configuration local: ", JSON.stringify(this.configuration));
             const firstBasePath = Array.isArray(basePath) ? basePath[0] : undefined;
             if (firstBasePath != undefined) {
                 basePath = firstBasePath;
@@ -60,8 +66,10 @@ export class AdressesService implements AdressesServiceInterface {
                 basePath = this.basePath;
             }
             this.configuration.basePath = basePath;
+            console.log("AdressesService.constructor basePath 02: ", basePath, "configuration: ", JSON.stringify(configuration));
         }
         this.encoder = this.configuration.encoder || new CustomHttpParameterCodec();
+        console.log("AdressesService.constructor basePath end: ", basePath, "configuration local: ", JSON.stringify(this.configuration));
     }
 
 
@@ -82,15 +90,15 @@ export class AdressesService implements AdressesServiceInterface {
 
         if (typeof value === "object") {
             if (Array.isArray(value)) {
-                (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
+                (value as any[]).forEach(elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
             } else if (value instanceof Date) {
                 if (key != null) {
                     httpParams = httpParams.append(key, (value as Date).toISOString().substring(0, 10));
                 } else {
-                   throw Error("key may not be null if value is Date");
+                    throw Error("key may not be null if value is Date");
                 }
             } else {
-                Object.keys(value).forEach( k => httpParams = this.addToHttpParamsRecursive(
+                Object.keys(value).forEach(k => httpParams = this.addToHttpParamsRecursive(
                     httpParams, value[k], key != null ? `${key}.${k}` : k));
             }
         } else if (key != null) {
@@ -109,10 +117,10 @@ export class AdressesService implements AdressesServiceInterface {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteAdres(id: number, xAPIKEY: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public deleteAdres(id: number, xAPIKEY: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public deleteAdres(id: number, xAPIKEY: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public deleteAdres(id: number, xAPIKEY: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public deleteAdres(id: number, xAPIKEY: string, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<any>;
+    public deleteAdres(id: number, xAPIKEY: string, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<HttpResponse<any>>;
+    public deleteAdres(id: number, xAPIKEY: string, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<HttpEvent<any>>;
+    public deleteAdres(id: number, xAPIKEY: string, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling deleteAdres.');
         }
@@ -172,7 +180,7 @@ export class AdressesService implements AdressesServiceInterface {
             }
         }
 
-        let localVarPath = `/adresses/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
+        let localVarPath = `/adresses/${this.configuration.encodeParam({ name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64" })}`;
         return this.httpClient.request<any>('delete', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -193,10 +201,10 @@ export class AdressesService implements AdressesServiceInterface {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteAllAdreses(xAPIKEY: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public deleteAllAdreses(xAPIKEY: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public deleteAllAdreses(xAPIKEY: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public deleteAllAdreses(xAPIKEY: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public deleteAllAdreses(xAPIKEY: string, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<any>;
+    public deleteAllAdreses(xAPIKEY: string, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<HttpResponse<any>>;
+    public deleteAllAdreses(xAPIKEY: string, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<HttpEvent<any>>;
+    public deleteAllAdreses(xAPIKEY: string, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<any> {
         if (xAPIKEY === null || xAPIKEY === undefined) {
             throw new Error('Required parameter xAPIKEY was null or undefined when calling deleteAllAdreses.');
         }
@@ -275,10 +283,10 @@ export class AdressesService implements AdressesServiceInterface {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAdres(id: number, xAPIKEY: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<Adres>;
-    public getAdres(id: number, xAPIKEY: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Adres>>;
-    public getAdres(id: number, xAPIKEY: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Adres>>;
-    public getAdres(id: number, xAPIKEY: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getAdres(id: number, xAPIKEY: string, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<Adres>;
+    public getAdres(id: number, xAPIKEY: string, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<HttpResponse<Adres>>;
+    public getAdres(id: number, xAPIKEY: string, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<HttpEvent<Adres>>;
+    public getAdres(id: number, xAPIKEY: string, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getAdres.');
         }
@@ -326,7 +334,7 @@ export class AdressesService implements AdressesServiceInterface {
             }
         }
 
-        let localVarPath = `/adresses/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
+        let localVarPath = `/adresses/${this.configuration.encodeParam({ name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64" })}`;
         return this.httpClient.request<Adres>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -351,10 +359,10 @@ export class AdressesService implements AdressesServiceInterface {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAdresPerons(page: number, size: number, id: number, xAPIKEY: string, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<PagedPersons>;
-    public getAdresPerons(page: number, size: number, id: number, xAPIKEY: string, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<PagedPersons>>;
-    public getAdresPerons(page: number, size: number, id: number, xAPIKEY: string, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<PagedPersons>>;
-    public getAdresPerons(page: number, size: number, id: number, xAPIKEY: string, sort?: Array<string>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getAdresPerons(page: number, size: number, id: number, xAPIKEY: string, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<PagedPersons>;
+    public getAdresPerons(page: number, size: number, id: number, xAPIKEY: string, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<HttpResponse<PagedPersons>>;
+    public getAdresPerons(page: number, size: number, id: number, xAPIKEY: string, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<HttpEvent<PagedPersons>>;
+    public getAdresPerons(page: number, size: number, id: number, xAPIKEY: string, sort?: Array<string>, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<any> {
         if (page === null || page === undefined) {
             throw new Error('Required parameter page was null or undefined when calling getAdresPerons.');
         }
@@ -368,19 +376,19 @@ export class AdressesService implements AdressesServiceInterface {
             throw new Error('Required parameter xAPIKEY was null or undefined when calling getAdresPerons.');
         }
 
-        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        let localVarQueryParameters = new HttpParams({ encoder: this.encoder });
         if (page !== undefined && page !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>page, 'page');
+            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                <any>page, 'page');
         }
         if (size !== undefined && size !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>size, 'size');
+            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                <any>size, 'size');
         }
         if (sort) {
             sort.forEach((element) => {
                 localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-                  <any>element, 'sort');
+                    <any>element, 'sort');
             })
         }
 
@@ -424,7 +432,7 @@ export class AdressesService implements AdressesServiceInterface {
             }
         }
 
-        let localVarPath = `/adresses/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}/persons`;
+        let localVarPath = `/adresses/${this.configuration.encodeParam({ name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64" })}/persons`;
         return this.httpClient.request<PagedPersons>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -449,10 +457,11 @@ export class AdressesService implements AdressesServiceInterface {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAdresses(page: number, size: number, xAPIKEY: string, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<PagedAdresses>;
-    public getAdresses(page: number, size: number, xAPIKEY: string, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<PagedAdresses>>;
-    public getAdresses(page: number, size: number, xAPIKEY: string, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<PagedAdresses>>;
-    public getAdresses(page: number, size: number, xAPIKEY: string, sort?: Array<string>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getAdresses(page: number, size: number, xAPIKEY: string, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<PagedAdresses>;
+    public getAdresses(page: number, size: number, xAPIKEY: string, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<HttpResponse<PagedAdresses>>;
+    public getAdresses(page: number, size: number, xAPIKEY: string, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<HttpEvent<PagedAdresses>>;
+    public getAdresses(page: number, size: number, xAPIKEY: string, sort?: Array<string>, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<any> {
+        console.log("AdressesService.getAdresses configuration: ", JSON.stringify(this.configuration));
         if (page === null || page === undefined) {
             throw new Error('Required parameter page was null or undefined when calling getAdresses.');
         }
@@ -463,19 +472,19 @@ export class AdressesService implements AdressesServiceInterface {
             throw new Error('Required parameter xAPIKEY was null or undefined when calling getAdresses.');
         }
 
-        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        let localVarQueryParameters = new HttpParams({ encoder: this.encoder });
         if (page !== undefined && page !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>page, 'page');
+            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                <any>page, 'page');
         }
         if (size !== undefined && size !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>size, 'size');
+            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                <any>size, 'size');
         }
         if (sort) {
             sort.forEach((element) => {
                 localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-                  <any>element, 'sort');
+                    <any>element, 'sort');
             })
         }
 
@@ -520,6 +529,10 @@ export class AdressesService implements AdressesServiceInterface {
         }
 
         let localVarPath = `/adresses`;
+        //
+        let url = `${this.configuration.basePath}${localVarPath}`
+        console.log("AdressesService.getAdresses url: ", url, " localpath: ", localVarPath, "queryParameters: ", localVarQueryParameters.toString());
+        //
         return this.httpClient.request<PagedAdresses>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -543,10 +556,10 @@ export class AdressesService implements AdressesServiceInterface {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public patchAdres(id: number, xAPIKEY: string, adres?: Adres, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<Adres>;
-    public patchAdres(id: number, xAPIKEY: string, adres?: Adres, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Adres>>;
-    public patchAdres(id: number, xAPIKEY: string, adres?: Adres, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Adres>>;
-    public patchAdres(id: number, xAPIKEY: string, adres?: Adres, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public patchAdres(id: number, xAPIKEY: string, adres?: Adres, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<Adres>;
+    public patchAdres(id: number, xAPIKEY: string, adres?: Adres, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<HttpResponse<Adres>>;
+    public patchAdres(id: number, xAPIKEY: string, adres?: Adres, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<HttpEvent<Adres>>;
+    public patchAdres(id: number, xAPIKEY: string, adres?: Adres, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling patchAdres.');
         }
@@ -616,7 +629,7 @@ export class AdressesService implements AdressesServiceInterface {
             }
         }
 
-        let localVarPath = `/adresses/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
+        let localVarPath = `/adresses/${this.configuration.encodeParam({ name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64" })}`;
         return this.httpClient.request<Adres>('patch', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -640,10 +653,10 @@ export class AdressesService implements AdressesServiceInterface {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public postAdres(override: boolean, xAPIKEY: string, adresBody: AdresBody, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<Adres>;
-    public postAdres(override: boolean, xAPIKEY: string, adresBody: AdresBody, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Adres>>;
-    public postAdres(override: boolean, xAPIKEY: string, adresBody: AdresBody, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Adres>>;
-    public postAdres(override: boolean, xAPIKEY: string, adresBody: AdresBody, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public postAdres(override: boolean, xAPIKEY: string, adresBody: AdresBody, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<Adres>;
+    public postAdres(override: boolean, xAPIKEY: string, adresBody: AdresBody, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<HttpResponse<Adres>>;
+    public postAdres(override: boolean, xAPIKEY: string, adresBody: AdresBody, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<HttpEvent<Adres>>;
+    public postAdres(override: boolean, xAPIKEY: string, adresBody: AdresBody, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean }): Observable<any> {
         if (override === null || override === undefined) {
             throw new Error('Required parameter override was null or undefined when calling postAdres.');
         }
@@ -654,10 +667,10 @@ export class AdressesService implements AdressesServiceInterface {
             throw new Error('Required parameter adresBody was null or undefined when calling postAdres.');
         }
 
-        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        let localVarQueryParameters = new HttpParams({ encoder: this.encoder });
         if (override !== undefined && override !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>override, 'override');
+            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                <any>override, 'override');
         }
 
         let localVarHeaders = this.defaultHeaders;

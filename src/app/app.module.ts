@@ -1,14 +1,15 @@
-import { NgModule, isDevMode } from '@angular/core';
+import { NgModule, isDevMode, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms'; // <-- NgModel lives here
 import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { AppconfigService } from './services/appconfig.service';
 
 import { environment } from '../environments/environment';
 
 
-import { ApiModule, Configuration, ConfigurationParameters } from './core/modules/openapi';
+import { ApiModule, BASE_PATH, Configuration, ConfigurationParameters } from './core/modules/openapi';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -32,13 +33,30 @@ import { PrivilegesComponent } from './privileges/privileges.component';
 import { PrivilegeComponent } from './privilege/privilege.component';
 import { PrivilegedetailComponent } from './privilegedetail/privilegedetail.component';
 import { PersonselectComponent } from './personselect/personselect.component';
+import { DynamicconfigService } from './services/dynamicconfig.service';
 
-/*
-export function apiConfigFactory(): Configuration {
-  return new Configuration({ basePath: environment.apiBaseUrl });
+// 1. Factory to initialize AppConfigService
+function initializeApp(appConfigService: AppconfigService) {
+  return () => appConfigService.loadConfig();
 }
-*/
 
+// 2. Factory to provide Configuration object dynamically
+//    This is generally the preferred method as it's more complete for the API client.
+export function apiConfigurationFactory(appConfigService: AppconfigService): Configuration {
+  // The getApiBaseUrl() will return the correct URL as loadConfig() is guaranteed to have run
+  console.log('apiConfigurationFactory called - config: ', 
+    JSON.stringify(appConfigService.getApiConfig(), null, 2)  
+  );
+  return appConfigService.getApiConfig();
+}
+
+// 3. (Optional Alternative) Factory to provide BASE_PATH token directly
+//    Use this if your generated client explicitly checks BASE_PATH or if you prefer.
+export function apiBasePathFactory(appConfigService: AppconfigService): string {
+  console.log('apiBasePathFactory called - basePath: ', appConfigService.getApiBaseUrl());
+  // This will return the basePath directly, which is used by the API client
+  return appConfigService.getApiBaseUrl();
+}
 
 @NgModule({
   declarations: [
@@ -79,7 +97,27 @@ export function apiConfigFactory(): Configuration {
     }) : []
   ],
   providers: [
-   
+    AppconfigService,
+    DynamicconfigService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeApp,
+      deps: [AppconfigService],
+      multi: true
+    },
+    {
+      // Provide the OpenAPI generated Configuration class as a DI token
+      // This allows generated API services to receive our dynamically configured basePath
+      provide: Configuration,
+      useFactory: apiConfigurationFactory, // Use our factory to create the Configuration
+      deps: [AppconfigService]            // It depends on AppConfigService
+    },
+    // OR (less common if Configuration is used) provide BASE_PATH directly
+//    {
+//      provide: BASE_PATH, // Use the BASE_PATH token
+//      useFactory: apiBasePathFactory,
+//      deps: [AppconfigService]
+//    }
   ],
   bootstrap: [AppComponent]
 })

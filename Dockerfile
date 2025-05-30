@@ -14,7 +14,7 @@ COPY --from=builder /app/dist/angular-app/browser /usr/share/nginx/html
 COPY ./public /usr/share/nginx/html/public
 #COPY nginx.conf.template /etc/nginx/nginx.conf.template # <--- Use the template
 COPY nginx.conf.template /etc/nginx/nginx.conf.template
-COPY public/assets/config/app-config.template.json /usr/share/nginx/html/public/assets/config/app-config.template.json
+#COPY public/assets/config/app-config.template.json /usr/share/nginx/html/public/assets/config/app-config.template.json
 # Substitute both variables before starting Nginx
 CMD ["sh", "-c", "envsubst '$API_BASE_URL $ADRES_APP_PROXY_URL' < /usr/share/nginx/html/public/assets/config/app-config.template.json > /usr/share/nginx/html/public/assets/config/app-config.json && envsubst '$ADRES_APP_PROXY_URL' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"]
 EXPOSE 80
