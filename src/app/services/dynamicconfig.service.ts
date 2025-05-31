@@ -11,7 +11,7 @@ export class DynamicconfigService {
   public configuration: Configuration = new Configuration();
 
   constructor(private appConfigService: AppconfigService) {
-    this.apiUrl = `${appConfigService.getApiBaseUrl()}`;
+    this.apiUrl = `${appConfigService.getBasePath()}`;
     console.log("DynamicconfigService() " + JSON.stringify(this.apiUrl));
 
     appConfigService.setBasePath(this.apiUrl);

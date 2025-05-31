@@ -31,8 +31,8 @@ export class UserComponent {
   onSave(user: User) {
     if (user != {} as User) {
       this.dbgmessageService.add('UserComponent - Adding not empty user');
-      const userbody: UserBody = { username: user.username, password: user.password, email: user.email, phone: user.phone} ;
-      this.userService.postUser(this.logonService.xApiKey, userbody)
+      const userbody: UserBody = { username: user.username, password: user.password, email: user.email, phone: user.phone };
+      this.userService.postUser(userbody)
         .subscribe({
           next:
             response => {

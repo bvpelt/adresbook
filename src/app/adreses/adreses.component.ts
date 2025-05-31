@@ -112,7 +112,7 @@ export class AdresesComponent implements OnInit {
     console.log("Delete adres")
     this.selectedAdres = adres;
 
-    this.adresService.deleteAdres(adres.id, this.logonService.xApiKey)
+    this.adresService.deleteAdres(adres.id)
       .subscribe({
         next:
           response => {

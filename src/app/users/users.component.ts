@@ -41,18 +41,18 @@ export class UsersComponent implements OnInit {
     this.adresChangesubscription = this.userschangedService.newUser$
       .subscribe(user => {
         this.dbgmessageService.debug('UsersComponent - retrieve adresses go add: ' + JSON.stringify(user));
-        this.getUsers(this.logonService.xApiKey, this.page, this.size);
+        this.getUsers(this.page, this.size);
       });
   }
 
   ngOnInit(): void {
     this.dbgmessageService.debug('UsersComponent - activated initial');
     this.errormessage = "";
-    this.getUsers(this.logonService.xApiKey, this.page, this.size);
+    this.getUsers(this.page, this.size);
   }
 
-  getUsers(xApiKey: string, page: number, size: number): void {
-    this.userService.getUsers(xApiKey, page, size)
+  getUsers(page: number, size: number): void {
+    this.userService.getUsers(page, size)
       .subscribe({
         next:
           response => {
@@ -98,19 +98,19 @@ export class UsersComponent implements OnInit {
 
   onNextPage(): void {
     this.page = this.nextpage;
-    this.getUsers(this.logonService.xApiKey, this.page, this.size);
+    this.getUsers(this.page, this.size);
   }
 
   onPrevPage(): void {
     this.page = this.prevpage;
-    this.getUsers(this.logonService.xApiKey, this.page, this.size);
+    this.getUsers(this.page, this.size);
   }
 
   onDelete(user: User): void {
     console.log("Delete user")
     this.selectedUser = user;
 
-    this.userService.deleteUser(user.id, this.logonService.xApiKey)
+    this.userService.deleteUser(user.id)
       .subscribe({
         next:
           response => {

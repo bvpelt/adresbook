@@ -26,7 +26,6 @@ export class AppconfigService {
     return this.apiKey;
   }
 
-
   setBasicAuth(username: string, password: string) {
     this.username = username;
     this.password = password;
@@ -40,7 +39,7 @@ export class AppconfigService {
     this.basePath = url;
   }
 
-  getApiBaseUrl(): string {
+  getBasePath(): string {
     return this.basePath
   }
 
@@ -50,7 +49,7 @@ export class AppconfigService {
       username: this.username,
       password: this.password,
       accessToken: this.jwt,
-      basePath: this.getApiBaseUrl()
+      basePath: this.basePath
     });
     return this.config
   }
@@ -61,7 +60,7 @@ export class AppconfigService {
       accessToken: () => this.jwt,
       username: this.username,
       password: this.password,
-      basePath: this.getApiBaseUrl()
+      basePath: this.basePath
     });
     return this.config;
   }
@@ -72,7 +71,7 @@ export class AppconfigService {
       accessToken: () => this.jwt,
       username: this.username,
       password: this.password,
-      basePath: this.getApiBaseUrl()
+      basePath: this.basePath
     });
     return this.config;
   }
@@ -81,7 +80,7 @@ export class AppconfigService {
     return firstValueFrom(this.http.get<AppConfig>('/public/assets/config/app-config.json'))
       .then(data => {
         this.basePath = data.apiBaseUrl;
-//        console.log('AppConfigService: Configuration loaded successfully:', this.basePath);
+        console.log('AppConfigService: Configuration loaded successfully:', this.basePath);
       })
       .catch(error => {
         console.error('AppConfigService: Error loading configuration:', error);

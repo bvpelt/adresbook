@@ -41,18 +41,18 @@ export class PrivilegesComponent implements OnInit {
     this.privilegeChangesubscription = this.privilegechangedService.newPrivilege$
       .subscribe(privilege => {
         this.dbgmessageService.debug('PrivilegesComponent - retrieve privilege go add: ' + JSON.stringify(privilege));
-        this.getPrivileges(this.logonService.xApiKey, this.page, this.size);
+        this.getPrivileges(this.page, this.size);
       });
   }
 
   ngOnInit(): void {
     this.dbgmessageService.debug('PrivilegesComponent - activated initial');
     this.errormessage = "";
-    this.getPrivileges(this.logonService.xApiKey, this.page, this.size);
+    this.getPrivileges(this.page, this.size);
   }
 
-  getPrivileges(xApiKey: string, page: number, size: number): void {
-    this.privilegeService.getPrivileges(xApiKey, page, size)
+  getPrivileges(page: number, size: number): void {
+    this.privilegeService.getPrivileges(page, size)
       .subscribe({
         next:
           response => {
@@ -98,19 +98,19 @@ export class PrivilegesComponent implements OnInit {
 
   onNextPage(): void {
     this.page = this.nextpage;
-    this.getPrivileges(this.logonService.xApiKey, this.page, this.size);
+    this.getPrivileges(this.page, this.size);
   }
 
   onPrevPage(): void {
     this.page = this.prevpage;
-    this.getPrivileges(this.logonService.xApiKey, this.page, this.size);
+    this.getPrivileges(this.page, this.size);
   }
 
   onDelete(privilege: Privilege): void {
     console.log("Delete privilege")
     this.selectedPrivilege = privilege;
 
-    this.privilegeService.deletePrivilege(privilege.id, this.logonService.xApiKey)
+    this.privilegeService.deletePrivilege(privilege.id)
       .subscribe({
         next:
           response => {
@@ -126,7 +126,6 @@ export class PrivilegesComponent implements OnInit {
   }
 
   ngOnDestroy() {
-
     if (this.privilegeChangesubscription) {
       this.privilegeChangesubscription.unsubscribe();
       this.dbgmessageService.trace('PrivilegesComponent - Subscription destroyed');

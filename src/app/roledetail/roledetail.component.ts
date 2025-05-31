@@ -27,15 +27,15 @@ export class RoledetailComponent {
     private logonService: LogonService,
     private dbgmessageService: DbgmessageService,
     private roleschangedService: RoleschangedService) {
-    this.getRole(this.logonService.xApiKey);
+    this.getRole();
     this.isLoggedIn$ = this.logonService.isLoggedIn$;
   }
 
 
-  getRole(xApiKey: string): void {
+  getRole(): void {
     const id: number = Number(this.route.snapshot.paramMap.get('id'));
 
-    this.roleService.getRole(id, xApiKey)
+    this.roleService.getRole(id)
       .subscribe({
         next:
           response => {
@@ -51,10 +51,10 @@ export class RoledetailComponent {
 
   onUpdate(role: Role) {
     var rolebody: RoleBody;
-    
-    rolebody = { rolename: role.rolename, description: role.description};
-    
-    this.roleService.patchRole(role.id, this.logonService.xApiKey, rolebody)
+
+    rolebody = { rolename: role.rolename, description: role.description };
+
+    this.roleService.patchRole(role.id, rolebody)
       .subscribe({
         next:
           response => {

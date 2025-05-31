@@ -19,7 +19,7 @@ export class AppComponent {
   constructor(private logonService: LogonService, private appConfigService: AppconfigService, private dynamicConfigService: DynamicconfigService) {
     this.isLoggedIn$ = this.logonService.isLoggedIn$;
 
-    var apiUrl: string = `${this.appConfigService.getApiBaseUrl()}`;
+    var apiUrl: string = `${this.appConfigService.getBasePath()}`;
     console.log("AppComponent() apiUrl: " + apiUrl);
 
     console.log("AppComponent() dynamicConfigService.apiUrl: " + this.dynamicConfigService.apiUrl);

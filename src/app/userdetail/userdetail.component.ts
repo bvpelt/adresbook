@@ -39,7 +39,7 @@ export class UserdetailComponent {
   getUser(xApiKey: string): void {
     const id: number = Number(this.route.snapshot.paramMap.get('id'));
 
-    this.userService.getUser(id, xApiKey)
+    this.userService.getUser(id)
       .subscribe({
         next:
           response => {
@@ -60,7 +60,7 @@ export class UserdetailComponent {
     } else {
       userbody = { username: user.username, email: user.email, phone: user.phone, accountNonExpired: user.accountNonExpired, accountNonLocked: user.accountNonLocked, credentialsNonExpired: user.credentialsNonExpired, enabled: user.enabled };
     }
-    this.userService.patchUser(user.id, this.logonService.xApiKey, userbody)
+    this.userService.patchUser(user.id, userbody)
       .subscribe({
         next:
           response => {

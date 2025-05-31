@@ -33,7 +33,7 @@ export class PersonComponent {
     if (person != {} as Person) {
       this.dbgmessageService.add('PersonComponent - Adding not empty person');
       const personbody: PersonBody = { firstName: person.firstName, infix: person.infix, lastName: person.lastName, dateOfBirth: person.dateOfBirth };
-      this.personService.postPerson(this.logonService.xApiKey, false, person)
+      this.personService.postPerson( false, person)
         .subscribe({
           next:
             response => {

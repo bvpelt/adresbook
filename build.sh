@@ -1,5 +1,5 @@
 #!/bin/bash -xv
-version="0.0.49"
+version="0.0.56"
 
 docker build -t adresbook .
 

@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { UserBody, BASE_PATH, UsersService, User, PagedUsers } from '../core/modules/openapi';
 import { DynamicconfigService } from './dynamicconfig.service';
+import { AppconfigService } from './appconfig.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,100 +13,75 @@ export class UserService {
   private api: UsersService | undefined;
 
   constructor(
-    private http: HttpClient,
-    @Optional() @Inject(BASE_PATH) basePath: string | string[],
-    private dynamicConfigService: DynamicconfigService
-  ) {
-    this.dynamicConfigService.config$.subscribe((config: any) => {
-      if (config) {
-        this.api = new UsersService(http, basePath, config);
-      }
-    });
+    private usersService: UsersService,
+    private appConfigService: AppconfigService) {
   }
 
   // public deleteUser(id: number, xAPIKEY?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-  deleteUser(id: number, xApiKey: string): Observable<HttpResponse<any>> {
-    const headers: HttpHeaders = new HttpHeaders({
-      'x-api-key': xApiKey
-    });
+  deleteUser(id: number): Observable<HttpResponse<any>> {
 
     const options: any = {
-      headers: headers
+      headers: new HttpHeaders({ 'Accept': 'application/json, application/problem+json' }) // It's good practice to also include problem+json if your backend returns it on errors
     }
 
-    if (this.api != undefined) {
-      return this.api.deleteUser(id, xApiKey, 'response', false, options);
+    if (this.usersService != undefined) {
+      return this.usersService.deleteUser(id, this.appConfigService.getApiKey(), 'response', false, options);
     } else {
       throw new Error("OpenadresService api not yet defined");
     }
   }
 
   // public deleteAllUsers(xAPIKEY?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-  deleteAllUsers(xApiKey: string, page?: number, size?: number): Observable<HttpResponse<any>> {
-    const headers: HttpHeaders = new HttpHeaders({
-      'x-api-key': xApiKey
-    });
+  deleteAllUsers(page?: number, size?: number): Observable<HttpResponse<any>> {
 
     const options: any = {
-      headers: headers
+      headers: new HttpHeaders({ 'Accept': 'application/json, application/problem+json' }) // It's good practice to also include problem+json if your backend returns it on errors
     }
 
-    if (this.api != undefined) {
-      return this.api.deleteAllUsers(xApiKey, 'response', false, options);
+    if (this.usersService != undefined) {
+      return this.usersService.deleteAllUsers(this.appConfigService.getApiKey(), 'response', false, options);
     } else {
       throw new Error("OpenadresService api not yet defined");
     }
   }
 
   // public getUser(id: number, xAPIKEY?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<User>>;
-  getUser(id: number, xApiKey: string): Observable<HttpResponse<User>> {
-    const headers: HttpHeaders = new HttpHeaders({
-      'x-api-key': xApiKey
-    });
+  getUser(id: number): Observable<HttpResponse<User>> {
 
     const options: any = {
-      headers: headers,
-      httpHeaderAccept: 'application/json'
+      headers: new HttpHeaders({ 'Accept': 'application/json, application/problem+json' }) // It's good practice to also include problem+json if your backend returns it on errors
     }
 
-    if (this.api != undefined) {
-      return this.api.getUser(id, xApiKey, 'response', false, options);
+    if (this.usersService != undefined) {
+      return this.usersService.getUser(id, this.appConfigService.getApiKey(), 'response', false, options);
     } else {
       throw new Error("OpenadresService api not yet defined");
     }
   }
 
   // public getUsers(page: number, size: number, sort?: Array<string>, xAPIKEY?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<PagedUsers>>;
-  getUsers(xApiKey: string, page?: number, size?: number): Observable<HttpResponse<PagedUsers>> {
-    const headers: HttpHeaders = new HttpHeaders({
-      'x-api-key': xApiKey
-    });
+  getUsers(page?: number, size?: number): Observable<HttpResponse<PagedUsers>> {
 
     const options: any = {
-      headers: headers,
-      httpHeaderAccept: 'application/json'
+      headers: new HttpHeaders({ 'Accept': 'application/json, application/problem+json' }) // It's good practice to also include problem+json if your backend returns it on errors
     }
 
-    if (this.api != undefined) {
-      return this.api.getUsers(page!, size!, xApiKey, ["id"], 'response', false, options);
+    if (this.usersService != undefined) {
+      return this.usersService.getUsers(page!, size!, this.appConfigService.getApiKey(), ["id"], 'response', false, options);
     } else {
       throw new Error("OpenadresService api not yet defined");
     }
   }
 
   // public patchUser(id: number, xAPIKEY?: string, userBody?: UserBody, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<User>>;
-  patchUser(id: number, xApiKey: string, adresBody?: UserBody): Observable<HttpResponse<User>> {
-    const headers: HttpHeaders = new HttpHeaders({
-      'x-api-key': xApiKey
-    });
+  patchUser(id: number, adresBody?: UserBody): Observable<HttpResponse<User>> {
 
     const options: any = {
-      headers: headers,
-      httpHeaderAccept: 'application/json'
+      headers: new HttpHeaders({ 'Accept': 'application/json, application/problem+json' }) // It's good practice to also include problem+json if your backend returns it on errors
     }
 
-    if (this.api != undefined) {
-      return this.api.patchUser(id, xApiKey, adresBody, 'response', false, options);
+    if (this.usersService != undefined) {
+      return this.usersService.patchUser(id, this.appConfigService.getApiKey(), adresBody, 'response', false, options);
     } else {
       throw new Error("OpenadresService api not yet defined");
     }
@@ -113,17 +89,14 @@ export class UserService {
 
 
   // public postUser(xAPIKEY?: string, userBody?: UserBody, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<User>>;
-  postUser(xApiKey: string, userBody?: UserBody): Observable<HttpResponse<User>> {
-    const headers: HttpHeaders = new HttpHeaders({
-      'x-api-key': xApiKey
-    });
+  postUser(userBody?: UserBody): Observable<HttpResponse<User>> {
+
     const options: any = {
-      headers: headers,
-      httpHeaderAccept: 'application/json'
+      headers: new HttpHeaders({ 'Accept': 'application/json, application/problem+json' }) // It's good practice to also include problem+json if your backend returns it on errors
     }
 
-    if (this.api != undefined) {
-      return this.api!.postUser(xApiKey, userBody!, 'response', false, options);
+    if (this.usersService != undefined) {
+      return this.usersService!.postUser(this.appConfigService.getApiKey(), userBody!, 'response', false, options);
     } else {
       throw new Error("OpenadresService api not yet defined");
     }

@@ -34,7 +34,7 @@ export class RoleComponent {
     if (role != {} as Role) {
       this.dbgmessageService.add('RoleComponent - Adding not empty user');
       const rolebody: RoleBody = { rolename: role.rolename, description: role.description };
-      this.roleService.postRole(this.logonService.xApiKey, rolebody)
+      this.roleService.postRole(rolebody)
         .subscribe({
           next:
             response => {

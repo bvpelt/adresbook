@@ -42,18 +42,18 @@ export class PersonsComponent {
     this.personChangesubscription = this.personschangedService.newAdres$
       .subscribe(adres => {
         this.dbgmessageService.debug('PersonsComponent - retrieve adresses go add: ' + JSON.stringify(adres));
-        this.getPersons(this.logonService.xApiKey, this.page, this.size);
+        this.getPersons(this.page, this.size);
       });
   }
 
   ngOnInit(): void {
     this.dbgmessageService.debug('PersonsComponent - activated initial');
     this.errormessage = "";
-    this.getPersons(this.logonService.xApiKey, this.page, this.size);    
+    this.getPersons(this.page, this.size);
   }
 
-  getPersons(xApiKey: string, page: number, size: number): void {
-    this.personService.getPersons(xApiKey, page, size)
+  getPersons(page: number, size: number): void {
+    this.personService.getPersons(page, size)
       .subscribe({
         next:
           response => {
@@ -99,19 +99,19 @@ export class PersonsComponent {
 
   onNextPage(): void {
     this.page = this.nextpage;
-    this.getPersons(this.logonService.xApiKey, this.page, this.size);
+    this.getPersons(this.page, this.size);
   }
 
   onPrevPage(): void {
     this.page = this.prevpage;
-    this.getPersons(this.logonService.xApiKey, this.page, this.size);
+    this.getPersons(this.page, this.size);
   }
 
   onDelete(person: Person): void {
     console.log("Delete person")
     this.selectedPerson = person;
 
-    this.personService.deletePerson(person.id, this.logonService.xApiKey)
+    this.personService.deletePerson(person.id)
       .subscribe({
         next:
           response => {

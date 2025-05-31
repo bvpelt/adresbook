@@ -32,7 +32,7 @@ export class PrivilegedetailComponent {
   getUser(xApiKey: string): void {
     const id: number = Number(this.route.snapshot.paramMap.get('id'));
 
-    this.privilegeService.getPrivilege(id, xApiKey)
+    this.privilegeService.getPrivilege(id)
       .subscribe({
         next:
           response => {
@@ -48,10 +48,10 @@ export class PrivilegedetailComponent {
 
   onUpdate(privilege: Privilege) {
     var privilegebody: PrivilegeBody;
-    
-    privilegebody = { name: privilege.name};
-    
-    this.privilegeService.patchPrivilege(privilege.id, this.logonService.xApiKey, privilegebody)
+
+    privilegebody = { name: privilege.name };
+
+    this.privilegeService.patchPrivilege(privilege.id, privilegebody)
       .subscribe({
         next:
           response => {

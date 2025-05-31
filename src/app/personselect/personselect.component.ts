@@ -36,7 +36,7 @@ export class PersonselectComponent {
     }
 
     getPersons() {
-      this.adresService.getAdresPerons(this.logonService.xApiKey, this.adres!.id, this.page, this.size, ["id"])
+      this.adresService.getAdresPerons(this.adres!.id, this.page, this.size, ["id"])
         .subscribe({
            next:
                    response => {

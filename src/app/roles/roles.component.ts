@@ -42,18 +42,18 @@ export class RolesComponent implements OnInit {
     this.rolesChangesubscription = this.RoleschangedService.newRole$
       .subscribe(role => {
         this.dbgmessageService.debug('RolesComponent - retrieve role go add: ' + JSON.stringify(role));
-        this.getRoles(this.logonService.xApiKey, this.page, this.size);
+        this.getRoles(this.page, this.size);
       });
   }
 
   ngOnInit(): void {
     this.dbgmessageService.debug('RolesComponent - activated initial');
     this.errormessage = "";
-    this.getRoles(this.logonService.xApiKey, this.page, this.size);
+    this.getRoles(this.page, this.size);
   }
 
-  getRoles(xApiKey: string, page: number, size: number): void {
-    this.roleService.getRoles(xApiKey, page, size)
+  getRoles(page: number, size: number): void {
+    this.roleService.getRoles(page, size)
       .subscribe({
         next:
           response => {
@@ -99,19 +99,19 @@ export class RolesComponent implements OnInit {
 
   onNextPage(): void {
     this.page = this.nextpage;
-    this.getRoles(this.logonService.xApiKey, this.page, this.size);
+    this.getRoles(this.page, this.size);
   }
 
   onPrevPage(): void {
     this.page = this.prevpage;
-    this.getRoles(this.logonService.xApiKey, this.page, this.size);
+    this.getRoles(this.page, this.size);
   }
 
   onDelete(role: Role): void {
     console.log("Delete role")
     this.selectedRole = role;
 
-    this.roleService.deleteRole(role.id, this.logonService.xApiKey)
+    this.roleService.deleteRole(role.id)
       .subscribe({
         next:
           response => {

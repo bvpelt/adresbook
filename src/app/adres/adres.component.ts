@@ -35,7 +35,7 @@ export class AdresComponent {
     if (adres != {} as Adres) {
       this.dbgmessageService.debug('AdresComponent - Adding not empty adres');
       const adresbody: AdresBody = { street: adres.street, housenumber: adres.housenumber, zipcode: adres.zipcode, city: adres.city };
-      this.adresService.postAdres(this.logonService.xApiKey, false, adres)
+      this.adresService.postAdres(false, adres)
         .subscribe({
           next:
             response => {

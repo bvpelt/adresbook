@@ -3,110 +3,86 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { RoleBody, BASE_PATH, RolesService, Role, PagedRoles, PrivilegesService, Privilege, PagedPrivileges, PrivilegeBody } from '../core/modules/openapi';
 import { DynamicconfigService } from './dynamicconfig.service';
+import { AppconfigService } from './appconfig.service';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class PrivilegeService {
-private api: PrivilegesService | undefined;
+  private api: PrivilegesService | undefined;
 
   constructor(
-    private http: HttpClient,
-    @Optional() @Inject(BASE_PATH) basePath: string | string[],
-    private dynamicConfigService: DynamicconfigService
+    private privilegesService: PrivilegesService,
+    private appConfigService: AppconfigService
   ) {
-    this.dynamicConfigService.config$.subscribe((config: any) => {
-      if (config) {
-        this.api = new PrivilegesService(http, basePath, config);
-      }
-    });
   }
 
-
   // public deleteRole(id: number, xAPIKEY?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-  deletePrivilege(id: number, xApiKey: string): Observable<HttpResponse<any>> {
-    const headers: HttpHeaders = new HttpHeaders({
-      'x-api-key': xApiKey
-    });
+  deletePrivilege(id: number): Observable<HttpResponse<any>> {
 
     const options: any = {
-      headers: headers
+      headers: new HttpHeaders({ 'Accept': 'application/json, application/problem+json' }) // It's good practice to also include problem+json if your backend returns it on errors
     }
 
-    if (this.api != undefined) {
-      return this.api.deletePrivilege(id, xApiKey, 'response', false, options);
+    if (this.privilegesService != undefined) {
+      return this.privilegesService.deletePrivilege(id, this.appConfigService.getApiKey(), 'response', false, options);
     } else {
       throw new Error("OpenadresService api not yet defined");
     }
   }
 
   // public deleteAllRoles(xAPIKEY?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-  deleteAllPrivileges(xApiKey: string, page?: number, size?: number): Observable<HttpResponse<any>> {
-    const headers: HttpHeaders = new HttpHeaders({
-      'x-api-key': xApiKey
-    });
+  deleteAllPrivileges(page?: number, size?: number): Observable<HttpResponse<any>> {
 
     const options: any = {
-      headers: headers
+      headers: new HttpHeaders({ 'Accept': 'application/json, application/problem+json' }) // It's good practice to also include problem+json if your backend returns it on errors
     }
 
-    if (this.api != undefined) {
-      return this.api.deleteAllPrivileges(xApiKey, 'response', false, options);
+    if (this.privilegesService != undefined) {
+      return this.privilegesService.deleteAllPrivileges(this.appConfigService.getApiKey(), 'response', false, options);
     } else {
       throw new Error("OpenadresService api not yet defined");
     }
   }
 
   // public getRole(id: number, xAPIKEY?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Role>>;
-  getPrivilege(id: number, xApiKey: string): Observable<HttpResponse<Privilege>> {
-    const headers: HttpHeaders = new HttpHeaders({
-      'x-api-key': xApiKey
-    });
+  getPrivilege(id: number): Observable<HttpResponse<Privilege>> {
 
     const options: any = {
-      headers: headers,
-      httpHeaderAccept: 'application/json'
+      headers: new HttpHeaders({ 'Accept': 'application/json, application/problem+json' }) // It's good practice to also include problem+json if your backend returns it on errors
     }
 
-    if (this.api != undefined) {
-      return this.api.getPrivilege(id, xApiKey, 'response', false, options);
+    if (this.privilegesService != undefined) {
+      return this.privilegesService.getPrivilege(id, this.appConfigService.getApiKey(), 'response', false, options);
     } else {
       throw new Error("OpenadresService api not yet defined");
     }
   }
 
   // public getRoles(page: number, size: number, sort?: Array<string>, xAPIKEY?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<PagedRoles>>;
-  getPrivileges(xApiKey: string, page?: number, size?: number): Observable<HttpResponse<PagedPrivileges>> {
-    const headers: HttpHeaders = new HttpHeaders({
-      'x-api-key': xApiKey
-    });
+  getPrivileges(page?: number, size?: number): Observable<HttpResponse<PagedPrivileges>> {
 
     const options: any = {
-      headers: headers,
-      httpHeaderAccept: 'application/json'
+      headers: new HttpHeaders({ 'Accept': 'application/json, application/problem+json' }) // It's good practice to also include problem+json if your backend returns it on errors
     }
 
-    if (this.api != undefined) {
-      return this.api.getPrivileges(page!, size!, xApiKey,  ["id"], 'response', false, options);
+    if (this.privilegesService != undefined) {
+      return this.privilegesService.getPrivileges(page!, size!, this.appConfigService.getApiKey(), ["id"], 'response', false, options);
     } else {
       throw new Error("OpenadresService api not yet defined");
     }
   }
 
   // public patchRole(id: number, xAPIKEY?: string, RoleBody?: RoleBody, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Role>>;
-  patchPrivilege(id: number, xApiKey: string, privilegeBody?: PrivilegeBody): Observable<HttpResponse<Privilege>> {
-    const headers: HttpHeaders = new HttpHeaders({
-      'x-api-key': xApiKey
-    });
+  patchPrivilege(id: number, privilegeBody?: PrivilegeBody): Observable<HttpResponse<Privilege>> {
 
     const options: any = {
-      headers: headers,
-      httpHeaderAccept: 'application/json'
+      headers: new HttpHeaders({ 'Accept': 'application/json, application/problem+json' }) // It's good practice to also include problem+json if your backend returns it on errors
     }
 
-    if (this.api != undefined) {
-      return this.api.patchPrivilege(id, xApiKey, privilegeBody, 'response', false, options);
+    if (this.privilegesService != undefined) {
+      return this.privilegesService.patchPrivilege(id, this.appConfigService.getApiKey(), privilegeBody, 'response', false, options);
     } else {
       throw new Error("OpenadresService api not yet defined");
     }
@@ -114,17 +90,14 @@ private api: PrivilegesService | undefined;
 
 
   // public postRole(xAPIKEY?: string, RoleBody?: RoleBody, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Role>>;
-  postPrivilege(xApiKey: string, privilegeBody?: PrivilegeBody): Observable<HttpResponse<Privilege>> {
-    const headers: HttpHeaders = new HttpHeaders({
-      'x-api-key': xApiKey
-    });
+  postPrivilege(privilegeBody?: PrivilegeBody): Observable<HttpResponse<Privilege>> {
+
     const options: any = {
-      headers: headers,
-      httpHeaderAccept: 'application/json'
+      headers: new HttpHeaders({ 'Accept': 'application/json, application/problem+json' }) // It's good practice to also include problem+json if your backend returns it on errors
     }
 
-    if (this.api != undefined) {
-      return this.api!.postPrivileges(xApiKey, privilegeBody!, 'response', false, options);
+    if (this.privilegesService != undefined) {
+      return this.privilegesService!.postPrivileges(this.appConfigService.getApiKey(), privilegeBody!, 'response', false, options);
     } else {
       throw new Error("OpenadresService api not yet defined");
     }

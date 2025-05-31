@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { DynamicconfigService } from './dynamicconfig.service';
 import { DbgmessageService } from './dbgmessage.service';
+import { AppconfigService } from './appconfig.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,45 +26,36 @@ export class LogonService {
   basePathToUse = Array.isArray(BASE_PATH) ? BASE_PATH[0] : BASE_PATH;
 
   constructor(
-    private http: HttpClient,
-    private dynamicconfigService: DynamicconfigService,
+    private loginService: LoginService,
+    private appConfigService: AppconfigService,
     private dbgmessageService: DbgmessageService,
-    @Optional() @Inject(BASE_PATH) basePath: string | string[]
   ) {
-    this.basePathToUse = Array.isArray(BASE_PATH) ? BASE_PATH[0] : BASE_PATH;
-    var config: Configuration = new Configuration({
-      basePath: this.basePathToUse
-    });
     this.isLoggedIn.next(false);
     this.authenticatedUser = undefined;
     this.authenticatedPassword = undefined;
-    this.api = new LoginService(http, basePath, config);
   }
- 
+
   doLogOut() {
     this.isLoggedIn.next(false);
     this.authenticatedUser = undefined;
     this.authenticatedPassword = undefined;
+    this.appConfigService.setBasicAuth
   }
 
   doLogin(username: string, password: string, email: string): Observable<HttpResponse<LoginResponse>> {
-    return this.postLogin(this.xApiKey, username, password, email);
+    return this.postLogin(username, password, email);
   }
 
   //public postLogin(loginRequest: LoginRequest, xAPIKEY?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<LoginResponse>>;
-  private postLogin(xApiKey: string, username: string, password: string, email: string): Observable<HttpResponse<LoginResponse>> {
+  private postLogin(username: string, password: string, email: string): Observable<HttpResponse<LoginResponse>> {
     const loginRequest: LoginRequest = { username: username, password: password, email: email };
-    const headers: HttpHeaders = new HttpHeaders({
-      'x-api-key': xApiKey
-    });
 
     const options: any = {
-      headers: headers,
-      httpHeaderAccept: 'application/json'
-    };
+      headers: new HttpHeaders({ 'Accept': 'application/json, application/problem+json' }) // It's good practice to also include problem+json if your backend returns it on errors
+    }
 
-    if (this.api != undefined) {
-      return this.api.postLogin( xApiKey, loginRequest, 'response', false, options);
+    if (this.loginService != undefined) {
+      return this.loginService.postLogin(this.appConfigService.getApiKey(), loginRequest, 'response', false, options);
     } else {
       console.log("LogonService no api available")
       throw Error("No api");

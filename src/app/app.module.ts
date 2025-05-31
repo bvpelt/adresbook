@@ -53,9 +53,9 @@ export function apiConfigurationFactory(appConfigService: AppconfigService): Con
 // 3. (Optional Alternative) Factory to provide BASE_PATH token directly
 //    Use this if your generated client explicitly checks BASE_PATH or if you prefer.
 export function apiBasePathFactory(appConfigService: AppconfigService): string {
-  console.log('apiBasePathFactory called - basePath: ', appConfigService.getApiBaseUrl());
+  console.log('apiBasePathFactory called - basePath: ', appConfigService.getBasePath());
   // This will return the basePath directly, which is used by the API client
-  return appConfigService.getApiBaseUrl();
+  return appConfigService.getBasePath();
 }
 
 @NgModule({

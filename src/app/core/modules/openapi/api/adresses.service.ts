@@ -493,6 +493,7 @@ export class AdressesService implements AdressesServiceInterface {
             localVarHeaders = localVarHeaders.set('X-API-KEY', String(xAPIKEY));
         }
 
+        console.log("AdressesService.getAdresses options: ", JSON.stringify(options));
         let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
@@ -505,6 +506,8 @@ export class AdressesService implements AdressesServiceInterface {
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
         }
+        console.log("AdressesService.getAdresses localVarHttpHeaderAcceptSelected: ", JSON.stringify(localVarHttpHeaderAcceptSelected));  
+        console.log("AdressesService.getAdresses localVarHeaders: ", JSON.stringify(localVarHeaders));  
 
         let localVarHttpContext: HttpContext | undefined = options && options.context;
         if (localVarHttpContext === undefined) {

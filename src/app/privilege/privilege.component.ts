@@ -33,7 +33,7 @@ export class PrivilegeComponent {
     if (privilege != {} as Privilege) {
       this.dbgmessageService.add('PrivilegeComponent - Adding not empty privilege');
       const privilegebody: PrivilegeBody = { name: privilege.name };
-      this.privilegeService.postPrivilege(this.logonService.xApiKey, privilegebody)
+      this.privilegeService.postPrivilege( privilegebody)
         .subscribe({
           next:
             response => {

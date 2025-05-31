@@ -35,7 +35,7 @@ export class AdresdetailComponent {
     private logonService: LogonService,
     private dbgmessageService: DbgmessageService,
     private adresseschangedService: AdresseschangedService) {
-    this.getAdres(this.logonService.xApiKey);
+    this.getAdres();
 
     this.isLoggedIn$ = this.logonService.isLoggedIn$;
 //    this.selectPerson$.subscribe(value => {
@@ -44,10 +44,10 @@ export class AdresdetailComponent {
   }
 
 
-  getAdres(xApiKey: string): void {
+  getAdres(): void {
     const id: number = Number(this.route.snapshot.paramMap.get('id'));
 
-    this.adresService.getAdres(id, xApiKey)
+    this.adresService.getAdres(id)
       .subscribe({
         next:
           response => {
@@ -65,7 +65,7 @@ export class AdresdetailComponent {
   onUpdate(adres: Adres) {
     const patchedAdres: Adres = { id: adres.id, street: adres.street, housenumber: adres.housenumber, zipcode: adres.zipcode, city: adres.city, persons: adres.persons };
     console.log("AdresdetailComponent update adres: " + JSON.stringify(this.adres));
-    this.adresService.patchAdres(adres.id, this.logonService.xApiKey, patchedAdres)
+    this.adresService.patchAdres(adres.id, patchedAdres)
       .subscribe({
         next:
           response => {

@@ -26,15 +26,15 @@ export class PersondetailComponent {
     private logonService: LogonService,
     private dbgmessageService: DbgmessageService,
     private personschangedService: PersonschangedService) {
-    this.getAdres(this.logonService.xApiKey);
+    this.getAdres();
 
     this.isLoggedIn$ = this.logonService.isLoggedIn$;
   }
 
-  getAdres(xApiKey: string): void {
+  getAdres(): void {
     const id: number = Number(this.route.snapshot.paramMap.get('id'));
 
-    this.personService.getPerson(id, xApiKey)
+    this.personService.getPerson(id)
       .subscribe({
         next:
           response => {
@@ -50,7 +50,7 @@ export class PersondetailComponent {
 
   onUpdate(person: Person) {
     const personbody: PersonBody = { firstName: person.firstName, infix: person.infix, lastName: person.lastName, dateOfBirth: person.dateOfBirth };
-    this.personService.patchPerson(person.id, this.logonService.xApiKey, personbody)
+    this.personService.patchPerson(person.id, personbody)
       .subscribe({
         next:
           response => {
